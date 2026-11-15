@@ -1,0 +1,318 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-espresso: #46351D;
+    --color-olive: #646F4B;
+    --color-sage-teal: #839D9A;
+    --color-sky-blue: #7BB2D9;
+    --color-soft-sage: #BFD2BF;
+    --color-white: #FFFFFF;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-espresso font-body antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold tracking-tight;
+  }
+
+  ::selection {
+    @apply bg-olive text-white;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-narrow {
+    @apply mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold
+      transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-olive
+      focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary {
+    @apply btn bg-olive text-white hover:bg-olive-600 shadow-soft;
+  }
+
+  .btn-secondary {
+    @apply btn bg-sageTeal text-white hover:bg-sageTeal-500;
+  }
+
+  .btn-outline {
+    @apply btn border border-olive bg-transparent text-olive hover:bg-olive hover:text-white;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-espresso hover:bg-espresso-50;
+  }
+
+  .btn-white {
+    @apply btn bg-white text-espresso hover:bg-softSage-100;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border border-espresso-100 bg-white px-4 py-2.5 text-sm text-espresso
+      placeholder:text-espresso-300 transition focus:border-olive focus:outline-none
+      focus:ring-2 focus:ring-olive/20;
+  }
+
+  .label-field {
+    @apply mb-1.5 block text-sm font-medium text-espresso;
+  }
+
+  .card {
+    @apply rounded-2xl border border-espresso-100 bg-white shadow-card;
+  }
+
+  .section-soft {
+    @apply bg-softSage-100;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  .badge-sky {
+    @apply badge bg-sky-100 text-sky-700;
+  }
+
+  .badge-olive {
+    @apply badge bg-olive-100 text-olive-700;
+  }
+
+  .badge-teal {
+    @apply badge bg-sageTeal-100 text-sageTeal-700;
+  }
+
+  .badge-sale {
+    @apply badge bg-sky-300 text-white;
+  }
+
+  .link-quiet {
+    @apply text-sageTeal-600 hover:text-sageTeal-500 transition-colors;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  @apply animate-pulse rounded-xl bg-espresso-50;
+}
+
+/* ============================================================
+   CINEMATIC HERO — Video + Rolling Typography + Scroll Shrink
+   ============================================================ */
+
+.word-rotator {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  position: relative;
+  /* height set dynamically by JS after font render */
+  line-height: 1;
+}
+
+.word-rotator__track {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  /* NO percentage-based positioning — JS uses pixel values */
+}
+
+.word-rotator__word {
+  display: block;
+  /* Must match the outer headline line-height so each word is exactly 1 slot */
+  line-height: 1;
+  white-space: nowrap;
+  padding-bottom: 0;
+}
+
+/* ---- Hero video container ---- */
+.hero-video-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  will-change: transform, border-radius;
+  overflow: hidden;
+  border-radius: 0;
+  transform-origin: center center;
+}
+
+.hero-video-wrap video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* ---- Cinematic hero section ---- */
+.cinematic-hero {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #46351D;
+}
+
+/* The outer pin wrapper — GSAP ScrollTrigger pins this */
+.cinematic-pin-wrap {
+  position: relative;
+}
+
+/* Overlay gradient on video */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(70,53,29,0.18) 0%,
+    rgba(70,53,29,0.08) 40%,
+    rgba(70,53,29,0.55) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Hero headline container */
+.hero-headline {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ---- Post-hero discovery section ---- */
+.discovery-section {
+  position: relative;
+  z-index: 0;
+  background: #F6FAF6;
+}
+
+/* ---- Category card hover ---- */
+.cat-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  cursor: pointer;
+  /* Shorter aspect so 6 cards fit inside the lower ~44% of the viewport */
+  aspect-ratio: 3 / 3.6;
+  background: #BFD2BF;
+}
+
+.cat-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.cat-card:hover .cat-card__img {
+  transform: scale(1.06);
+}
+
+.cat-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(70, 53, 29, 0.72) 100%
+  );
+  transition: opacity 0.4s ease;
+}
+
+.cat-card:hover .cat-card__overlay {
+  opacity: 0.9;
+}
+
+.cat-card__label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 18px 18px;
+  transform: translateY(0);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cat-card:hover .cat-card__label {
+  transform: translateY(-4px);
+}
+
+/* ---- Scroll-reveal utility ---- */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(32px);
+  /* GSAP will animate this in */
+}
+
+/* ---- prefers-reduced-motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .word-rotator__track {
+    transition: none !important;
+    animation: none !important;
+  }
+  .hero-video-wrap,
+  .hero-headline,
+  .cat-card__img,
+  .reveal-up {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Announcement bar marquee */
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+/* Pause on hover */
+.relative:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
