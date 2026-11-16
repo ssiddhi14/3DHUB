@@ -169,7 +169,11 @@ function CategoryCard({
   imgSrc: string
 }) {
   return (
-    <Link to={`/category/${slug}`} className="cat-card block" aria-label={label}>
+    <Link
+      to={`/category/${slug}`}
+      className="cat-card block"
+      aria-label={label}
+    >
       <img
         src={imgSrc}
         alt={label}
@@ -230,6 +234,7 @@ export function CinematicHero() {
 
   useEffect(() => {
     if (prefersReducedMotion) return
+    if (!displayCategories.length) return // wait for data
 
     const ctx = gsap.context(() => {
       // Ensure video plays
@@ -283,31 +288,30 @@ export function CinematicHero() {
         0.1,
       )
 
-      // Step 3 (55–100%): Reveal discovery heading
+      // Step 3: Reveal heading
       tl.fromTo(
         discoverHeadRef.current,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, ease: 'power3.out', duration: 0.4 },
-        0.62,
+        { opacity: 0, y: 36 },
+        { opacity: 1, y: 0, ease: 'power3.out', duration: 0.35 },
+        0.60,
       )
 
-      // Step 4 (70–100%): Stagger category cards in
-      tl.fromTo(
-        '.cat-card.reveal-up',
-        { opacity: 0, y: 56 },
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'power3.out',
-          duration: 0.4,
-          stagger: 0.07,
-        },
-        0.72,
-      )
+      // Step 4: Boxes appear with heading — scroll triggered
+      if (catGridRef.current) {
+        const cards = Array.from(catGridRef.current.querySelectorAll('[data-card]'))
+        if (cards.length) {
+          tl.fromTo(
+            cards,
+            { opacity: 0, y: 44 },
+            { opacity: 1, y: 0, ease: 'power3.out', duration: 0.35, stagger: 0.06 },
+            0.65,
+          )
+        }
+      }
     })
 
     return () => ctx.revert()
-  }, [prefersReducedMotion])
+  }, [prefersReducedMotion, displayCategories.length])
 
   return (
     <>
@@ -441,14 +445,22 @@ export function CinematicHero() {
               style={{ pointerEvents: 'auto' }}
             >
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-                {displayCategories.map((c) => (
-                  <CategoryCard
+                {displayCategories.map((c, i) => (
+                  <div
                     key={c.slug + c.label}
-                    label={c.label}
-                    slug={c.slug}
-                    accent={c.accent}
-                    imgSrc={c.imgSrc}
-                  />
+                    data-card="true"
+                    style={{
+                      opacity: displayCategories.length ? 0 : 1,
+                      transform: displayCategories.length ? 'translateY(44px)' : 'none',
+                    }}
+                  >
+                    <CategoryCard
+                      label={c.label}
+                      slug={c.slug}
+                      accent={c.accent}
+                      imgSrc={c.imgSrc}
+                    />
+                  </div>
                 ))}
               </div>
             </div>

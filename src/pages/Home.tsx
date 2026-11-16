@@ -160,10 +160,20 @@ function CustomPrintingCTA() {
 
 function PersonalizedSection({ products }: { products: Product[] }) {
   return (
-    <section className="bg-softSage-100 py-16">
+    <section className="py-10">
       <div className="container-page">
-        <SectionHeading title="Trending 3D Prints" subtitle="What everyone's printing right now" link="/shop" />
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {/* Banner — full image */}
+        <Link to="/shop" className="relative block overflow-hidden rounded-3xl" style={{ minHeight: '220px' }}>
+          <img
+            src="/image.png"
+            alt="Trending 3D Prints"
+            className="h-full w-full object-cover"
+            style={{ mixBlendMode: 'multiply' }}
+          />
+        </Link>
+
+        {/* Product cards below */}
+        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           {products.slice(0, 4).map((p) => <ProductCard key={p.id} product={p} />)}
         </div>
       </div>

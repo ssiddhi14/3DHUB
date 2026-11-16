@@ -12,23 +12,27 @@ const ITEMS = [
   '✦ Print it.',
 ]
 
-// Duplicate for seamless infinite loop
 const TRACK = [...ITEMS, ...ITEMS]
 
 export function AnnouncementBar() {
   const [open, setOpen] = useState(true)
+  const [paused, setPaused] = useState(false)
+
   if (!open) return null
 
   return (
     <div
       className="relative bg-espresso"
       style={{ overflow: 'hidden' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
       <div
         style={{
           display: 'flex',
           width: 'max-content',
-          animation: 'marquee-scroll 28s linear infinite',
+          animation: 'marquee-scroll 18s linear infinite',
+          animationPlayState: paused ? 'paused' : 'running',
         }}
       >
         {TRACK.map((item, i) => (
@@ -48,7 +52,6 @@ export function AnnouncementBar() {
         ))}
       </div>
 
-      {/* Close button */}
       <button
         onClick={() => setOpen(false)}
         className="absolute right-3 top-1/2 -translate-y-1/2 text-softSage-200 hover:text-white z-10"
