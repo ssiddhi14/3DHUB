@@ -257,8 +257,8 @@ function ReviewsSection() {
     <section className="py-16">
       <div className="container-page">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-heading text-3xl font-bold text-espresso">Loved by makers</h2>
-          <p className="mt-3 text-espresso-500">Real reviews from real customers.</p>
+          <h2 className="font-heading text-3xl font-bold text-espresso">Printed here, loved there</h2>
+          <p className="mt-3 text-espresso-500">Unedited, straight from our customers.</p>
         </div>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {reviews.map((r) => (
