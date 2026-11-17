@@ -228,6 +228,12 @@
   will-change: transform, opacity;
 }
 
+/* Allow clicks on CTA buttons inside headline */
+.hero-headline a,
+.hero-headline button {
+  pointer-events: auto;
+}
+
 /* ---- Post-hero discovery section ---- */
 .discovery-section {
   position: relative;

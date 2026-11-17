@@ -381,8 +381,8 @@ export function CinematicHero() {
                 Premium 3D-printed products &amp; custom printing services
               </p>
 
-              {/* CTAs — visible on hero, slide away with headline */}
-              <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              {/* CTAs — always visible and clickable */}
+              <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center" style={{ pointerEvents: 'auto' }}>
                 <Link
                   to="/shop"
                   className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-espresso transition hover:bg-softSage"
