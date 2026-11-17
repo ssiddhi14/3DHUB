@@ -241,13 +241,13 @@ export function CinematicHero() {
       videoRef.current?.play().catch(() => {})
 
       /* ---- Main scroll timeline ---- */
+      const isMobile = window.innerWidth < 768
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinWrapRef.current,
           start: 'top top',
-          // scrub distance = 2× viewport height so the animation feels weighty
           end: '+=180%',
-          pin: true,
+          pin: !isMobile,  // disable pin on mobile
           scrub: 1.2,
           anticipatePin: 1,
         },

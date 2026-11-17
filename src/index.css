@@ -186,6 +186,16 @@
   background: #46351D;
 }
 
+@media (max-width: 768px) {
+  .cinematic-hero {
+    height: 55vw;
+    min-height: 320px;
+  }
+  .cinematic-pin-wrap {
+    /* Disable GSAP pin on mobile */
+  }
+}
+
 /* The outer pin wrapper — GSAP ScrollTrigger pins this */
 .cinematic-pin-wrap {
   position: relative;
