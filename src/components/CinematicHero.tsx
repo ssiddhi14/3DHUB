@@ -401,7 +401,7 @@ export function CinematicHero() {
             </div>
           </div>
 
-          {/* ── Discovery section (revealed inside the pin) ── */}
+          {/* ── Discovery section ── */}
           <div
             ref={discoveryRef}
             style={{
@@ -413,6 +413,7 @@ export function CinematicHero() {
               padding: '0',
               pointerEvents: 'none',
             }}
+            className="hidden md:block"
           >
             {/* Section heading */}
             <div
@@ -465,6 +466,54 @@ export function CinematicHero() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* ── Mobile-only categories section — below the hero, normal flow ── */}
+      <div className="block md:hidden bg-softSage-50 px-4 py-8">
+        <p
+          className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-espresso-400 mb-1"
+          style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}
+        >
+          What we create
+        </p>
+        <h2
+          className="text-center text-espresso font-bold mb-5"
+          style={{
+            fontFamily: '"Space Grotesk", system-ui, sans-serif',
+            fontSize: '1.5rem',
+          }}
+        >
+          Explore What We Create.
+        </h2>
+        <div className="grid grid-cols-2 gap-3">
+          {displayCategories.map((c) => (
+            <Link
+              key={c.slug + c.label}
+              to={`/category/${c.slug}`}
+              className="cat-card block"
+              aria-label={c.label}
+            >
+              <img
+                src={c.imgSrc}
+                alt={c.label}
+                className="cat-card__img"
+                loading="lazy"
+              />
+              <div className="cat-card__overlay" />
+              <div className="cat-card__label">
+                <p
+                  className="text-sm font-semibold text-white leading-tight"
+                  style={{ fontFamily: '"Space Grotesk", system-ui, sans-serif' }}
+                >
+                  {c.label}
+                </p>
+                <span className="mt-1 inline-flex items-center gap-1 text-xs text-softSage-100 opacity-70">
+                  Explore <ChevronRight className="h-3 w-3" />
+                </span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </>
