@@ -185,8 +185,19 @@ export async function fetchProducts(opts?: {
 }): Promise<Product[]> {
   if (supabaseReady && supabase) {
     let query = supabase.from('products').select('*, category:categories(*), material:materials(*)')
+
+    // Filter by category slug — first get category id, then filter products
     if (opts?.categorySlug) {
-      query = query.eq('category.slug', opts.categorySlug)
+      const { data: cat } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('slug', opts.categorySlug)
+        .maybeSingle()
+      if (cat) {
+        query = query.eq('category_id', cat.id)
+      } else {
+        return [] // category not found — return empty
+      }
     }
     if (opts?.bestseller) query = query.eq('is_bestseller', true)
     if (opts?.featured) query = query.eq('is_featured', true)
