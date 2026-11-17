@@ -731,11 +731,18 @@ export async function createReview(review: Partial<Review>): Promise<void> {
 
 export async function saveReview(review: Partial<Review>): Promise<void> {
   if (supabaseReady && supabase) {
+    const payload = {
+      ...review,
+      product_id: review.product_id || '00000000-0000-0000-0000-000000000000',
+      user_id: review.user_id || '00000000-0000-0000-0000-000000000000',
+    }
     if (review.id) {
-      const { error } = await supabase.from('reviews').update(review).eq('id', review.id)
+      const { id: _id, created_at: _ca, ...updateData } = payload as any
+      const { error } = await supabase.from('reviews').update(updateData).eq('id', review.id)
       if (error) throw error
     } else {
-      const { error } = await supabase.from('reviews').insert(review)
+      const { id: _id, created_at: _ca, ...insertData } = payload as any
+      const { error } = await supabase.from('reviews').insert(insertData)
       if (error) throw error
     }
     return
