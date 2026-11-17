@@ -136,16 +136,17 @@ export async function signIn(email: string, password: string): Promise<{ error: 
 
 export async function signInWithGoogle(): Promise<{ error: string | null }> {
   if (supabaseReady && supabase) {
+    // Use current origin so it works both on localhost and vercel
+    const redirectTo = `${window.location.origin}/login`
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/login`,
+        redirectTo,
         queryParams: { prompt: 'select_account' },
       },
     })
     return { error: error?.message ?? null }
   }
-  // demo mode: OAuth needs a configured Supabase project
   return { error: 'Google sign-in requires a connected Supabase project. Add your credentials to .env to enable it.' }
 }
 

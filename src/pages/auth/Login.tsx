@@ -1,15 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Mail, Lock, ArrowRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Logo } from '@/components/ui/Logo'
 import { GoogleButton } from '@/components/ui/GoogleButton'
 import { useToast } from '@/components/ui/Toast'
+import { supabase, supabaseReady } from '@/lib/supabase'
 
 export function Login() {
-  const { signIn, signInWithGoogle } = useAuth()
+  const { signIn, signInWithGoogle, refresh } = useAuth()
   const { toast } = useToast()
   const navigate = useNavigate()
   const location = useLocation()
@@ -19,17 +19,55 @@ export function Login() {
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
 
+  // Handle Google OAuth callback — Supabase returns #access_token in the URL hash
+  useEffect(() => {
+    if (!supabaseReady || !supabase) return
+
+    // If URL has hash with access_token — Supabase OAuth callback
+    if (window.location.hash.includes('access_token')) {
+      setGoogleLoading(true)
+      supabase.auth.getSession().then(async ({ data }) => {
+        if (data.session) {
+          await refresh()
+          // Clear the hash from URL
+          window.history.replaceState(null, '', window.location.pathname)
+          const stored = localStorage.getItem('3dhub-current-user')
+          const user = stored ? JSON.parse(stored) : null
+          if (user?.role === 'admin') {
+            navigate('/admin', { replace: true })
+          } else {
+            navigate('/', { replace: true })
+          }
+        }
+        setGoogleLoading(false)
+      })
+      return
+    }
+
+    // Also listen for auth state change (handles redirect back)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if ((event === 'SIGNED_IN') && session) {
+        await refresh()
+        window.history.replaceState(null, '', window.location.pathname)
+        const stored = localStorage.getItem('3dhub-current-user')
+        const user = stored ? JSON.parse(stored) : null
+        if (user?.role === 'admin') {
+          navigate('/admin', { replace: true })
+        } else {
+          navigate('/', { replace: true })
+        }
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [navigate, refresh])
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     const { error } = await signIn(email, password)
     setLoading(false)
-    if (error) {
-      toast(error, 'error')
-      return
-    }
-    // Re-read the user from context after sign in
-    // We need the latest role — read from localStorage which AuthContext sets
+    if (error) { toast(error, 'error'); return }
     const stored = localStorage.getItem('3dhub-current-user')
     const user = stored ? JSON.parse(stored) : null
     if (user?.role === 'admin') {
@@ -46,6 +84,7 @@ export function Login() {
       setGoogleLoading(false)
       toast(error, 'error')
     }
+    // Browser redirects to Google — loading stays
   }
 
   return (
