@@ -716,6 +716,8 @@ export async function createReview(review: Partial<Review>): Promise<void> {
     rating: review.rating || 5,
     title: review.title || '',
     body: review.body || '',
+    photo_url: review.photo_url ?? null,
+    product_name: review.product_name ?? null,
     is_approved: false,
     created_at: new Date().toISOString(),
   }
@@ -725,6 +727,48 @@ export async function createReview(review: Partial<Review>): Promise<void> {
     return
   }
   mutate((s) => void s.reviews.unshift(full))
+}
+
+export async function saveReview(review: Partial<Review>): Promise<void> {
+  if (supabaseReady && supabase) {
+    if (review.id) {
+      const { error } = await supabase.from('reviews').update(review).eq('id', review.id)
+      if (error) throw error
+    } else {
+      const { error } = await supabase.from('reviews').insert(review)
+      if (error) throw error
+    }
+    return
+  }
+  mutate((s) => {
+    if (review.id) {
+      const r = s.reviews.find((r) => r.id === review.id)
+      if (r) Object.assign(r, review)
+    } else {
+      s.reviews.unshift({
+        id: genId('rev'),
+        product_id: review.product_id || '',
+        user_id: review.user_id || 'admin',
+        user_name: review.user_name || 'Customer',
+        rating: review.rating || 5,
+        title: review.title || '',
+        body: review.body || '',
+        photo_url: review.photo_url ?? null,
+        product_name: review.product_name ?? null,
+        is_approved: review.is_approved ?? true,
+        created_at: new Date().toISOString(),
+      })
+    }
+  })
+}
+
+export async function deleteReview(id: string): Promise<void> {
+  if (supabaseReady && supabase) {
+    const { error } = await supabase.from('reviews').delete().eq('id', id)
+    if (error) throw error
+    return
+  }
+  mutate((s) => void s.reviews.splice(s.reviews.findIndex((r) => r.id === id), 1))
 }
 
 export async function setReviewApproval(id: string, approved: boolean): Promise<void> {

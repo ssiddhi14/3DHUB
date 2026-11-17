@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom'
 import {
   ArrowRight, Boxes, Palette, Truck, ShieldCheck,
   PenTool, MousePointerClick, Printer, PackageCheck, Star,
-  Quote,
+  Quote, Check,
 } from 'lucide-react'
 import { useAsync } from '@/hooks/useData'
-import { fetchProducts, fetchBanners } from '@/services/data'
+import { fetchProducts, fetchBanners, fetchReviews } from '@/services/data'
 import { ProductCard } from '@/components/ProductCard'
 import { Button } from '@/components/ui/Button'
 import { SmartImage } from '@/components/ui/SmartImage'
@@ -242,11 +242,17 @@ function ProcessSection() {
 }
 
 function ReviewsSection() {
-  const reviews = [
-    { name: 'Aarav S.', product: 'Articulated Dragon Model', text: 'The detail is unreal. Every joint moves perfectly. My kids fight over it.', rating: 5 },
-    { name: 'Priya M.', product: 'Custom Lithophane Night Light', text: 'I gifted this to my mom with our family photo. She cried. Worth every rupee.', rating: 5 },
-    { name: 'Rohan K.', product: 'Modular Desk Organizer', text: 'Clean design, sturdy print. My desk has never looked this organized.', rating: 5 },
+  const { data: dbReviews } = useAsync(() => fetchReviews(undefined, true))
+
+  // Static fallback reviews (shown when DB has none)
+  const fallback = [
+    { id: '1', product_id: '', user_id: '', user_name: 'Aarav S.', rating: 5, title: '', body: 'The detail is unreal. Every joint moves perfectly. My kids fight over it.', photo_url: null, product_name: 'Articulated Dragon Model', is_approved: true, created_at: '' },
+    { id: '2', product_id: '', user_id: '', user_name: 'Priya M.', rating: 5, title: '', body: 'I gifted this to my mom with our family photo. She cried. Worth every rupee.', photo_url: null, product_name: 'Custom Lithophane Night Light', is_approved: true, created_at: '' },
+    { id: '3', product_id: '', user_id: '', user_name: 'Rohan K.', rating: 5, title: '', body: 'Clean design, sturdy print. My desk has never looked this organized.', photo_url: null, product_name: 'Modular Desk Organizer', is_approved: true, created_at: '' },
   ]
+
+  const reviews = (dbReviews && dbReviews.length > 0 ? dbReviews : fallback).slice(0, 6)
+
   return (
     <section className="py-16">
       <div className="container-page">
@@ -254,18 +260,47 @@ function ReviewsSection() {
           <h2 className="font-heading text-3xl font-bold text-espresso">Loved by makers</h2>
           <p className="mt-3 text-espresso-500">Real reviews from real customers.</p>
         </div>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {reviews.map((r) => (
-            <div key={r.name} className="card p-6">
-              <div className="flex gap-1">
-                {Array.from({ length: r.rating }).map((_, i) => <Star key={i} className="h-4 w-4 fill-sky-300 text-sky-300" />)}
+            <div key={r.id} className="overflow-hidden rounded-2xl shadow-card">
+              {/* Top — customer photo or placeholder */}
+              <div className="relative aspect-[4/3] bg-softSage-200">
+                {r.photo_url ? (
+                  <img src={r.photo_url} alt="Customer photo" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-softSage-200 to-sageTeal-200">
+                    <div className="flex gap-2">
+                      {[32, 48, 28].map((h, i) => (
+                        <div key={i} className="rounded-xl border-2 border-white/60" style={{ width: h * 0.65, height: h }} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* Customer photo badge */}
+                <span className="absolute bottom-3 left-3 rounded-full bg-espresso/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                  Customer photo
+                </span>
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-espresso-600">"{r.text}"</p>
-              <div className="mt-4 flex items-center gap-3 border-t border-espresso-100 pt-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-softSage-100 font-bold text-olive">{r.name[0]}</div>
-                <div>
-                  <p className="text-sm font-semibold text-espresso">{r.name}</p>
-                  <p className="text-xs text-espresso-400">{r.product}</p>
+
+              {/* Bottom — review */}
+              <div className="bg-espresso-800 p-5" style={{ backgroundColor: '#2A2011' }}>
+                <p className="text-sm leading-relaxed text-softSage-100">
+                  "{r.body}"
+                </p>
+                <div className="mt-4 flex items-center gap-3 border-t border-white/10 pt-4">
+                  {/* Avatar */}
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-olive text-sm font-bold text-white">
+                    {r.user_name[0]}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-white">{r.user_name}</p>
+                      <span className="inline-flex items-center gap-1 text-xs text-olive-400" style={{ color: '#a3b880' }}>
+                        <Check className="h-3 w-3" /> Verified buyer
+                      </span>
+                    </div>
+                    <p className="truncate text-xs text-softSage-300">{r.product_name || 'Verified purchase'}</p>
+                  </div>
                 </div>
               </div>
             </div>

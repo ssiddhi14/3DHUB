@@ -204,6 +204,8 @@ export interface Review {
   rating: number
   title: string
   body: string
+  photo_url: string | null
+  product_name: string | null
   is_approved: boolean
   created_at: string
 }
