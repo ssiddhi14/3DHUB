@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { X } from 'lucide-react'
 
 const ITEMS = [
   '🚚 Free shipping on orders over ₹999',
@@ -15,10 +14,7 @@ const ITEMS = [
 const TRACK = [...ITEMS, ...ITEMS]
 
 export function AnnouncementBar() {
-  const [open, setOpen] = useState(true)
   const [paused, setPaused] = useState(false)
-
-  if (!open) return null
 
   return (
     <div
@@ -51,14 +47,6 @@ export function AnnouncementBar() {
           </span>
         ))}
       </div>
-
-      <button
-        onClick={() => setOpen(false)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-softSage-200 hover:text-white z-10"
-        aria-label="Dismiss"
-      >
-        <X className="h-3.5 w-3.5" />
-      </button>
 
       <style>{`
         @keyframes marquee-scroll {
