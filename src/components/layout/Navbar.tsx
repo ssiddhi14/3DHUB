@@ -36,7 +36,11 @@ export function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
-    return () => void (document.body.style.overflow = '')
+    document.body.style.pointerEvents = mobileOpen ? 'none' : ''
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.pointerEvents = ''
+    }
   }, [mobileOpen])
 
   const submitSearch = (e: React.FormEvent) => {
@@ -137,17 +141,22 @@ export function Navbar() {
       )}
 
       {/* Mobile drawer — always in DOM, slides in/out via CSS transform */}
-      {/* Overlay */}
+      {/* Overlay — blocks ALL clicks on background when open */}
       <div
         className="fixed inset-0 lg:hidden"
         style={{
           zIndex: 9999,
-          pointerEvents: mobileOpen ? 'auto' : 'none',
+          pointerEvents: mobileOpen ? 'all' : 'none',
           opacity: mobileOpen ? 1 : 0,
           transition: 'opacity 300ms ease',
-          backgroundColor: 'rgba(46,32,17,0.55)',
+          backgroundColor: 'rgba(46,32,17,0.60)',
+          cursor: mobileOpen ? 'pointer' : 'default',
         }}
-        onClick={() => setMobileOpen(false)}
+        onClick={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          setMobileOpen(false)
+        }}
       />
       {/* Drawer panel */}
       <div
@@ -159,7 +168,9 @@ export function Navbar() {
           transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 350ms cubic-bezier(0.4, 0, 0.2, 1)',
           height: '100dvh',
+          pointerEvents: mobileOpen ? 'all' : 'none',
         }}
+        onClick={(e) => e.stopPropagation()}
       >
             <div className="flex items-center justify-between border-b border-espresso-100 px-4 py-4">
               <Logo />
