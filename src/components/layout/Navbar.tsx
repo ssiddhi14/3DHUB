@@ -140,7 +140,7 @@ export function Navbar() {
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-espresso-900/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <div className="absolute left-0 top-0 h-full w-80 max-w-[85%] bg-white shadow-cardHover animate-slide-up">
+          <div className="absolute left-0 top-0 h-full w-80 max-w-[85%] bg-white opacity-100 shadow-cardHover animate-slide-up" style={{ backgroundColor: '#ffffff' }}>
             <div className="flex items-center justify-between border-b border-espresso-100 px-4 py-4">
               <Logo />
               <button onClick={() => setMobileOpen(false)} className="text-espresso" aria-label="Close menu">
