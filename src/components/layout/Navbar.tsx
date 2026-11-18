@@ -49,7 +49,7 @@ export function Navbar() {
   }
 
   return (
-    <header className={cn('sticky top-0 z-40 bg-white/95 backdrop-blur transition-shadow', scrolled && 'shadow-soft')}>
+    <header className={cn('sticky top-0 bg-white/95 backdrop-blur transition-shadow', scrolled && 'shadow-soft')} style={{ zIndex: 9998 }}>
       <nav className="container-page">
         <div className="flex h-16 items-center justify-between gap-4">
           {/* Left: mobile menu + logo */}
