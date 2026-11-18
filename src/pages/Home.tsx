@@ -217,7 +217,7 @@ function ProcessSection() {
     { icon: PackageCheck, title: 'Delivered', desc: 'Carefully packed and shipped to your doorstep.' },
   ]
   return (
-    <section className="bg-espresso py-16 text-white">
+    <section className="bg-espresso pt-8 pb-16 text-white">
       <div className="container-page">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-heading text-3xl font-bold">Our Printing Process</h2>
