@@ -141,10 +141,12 @@ export function Navbar() {
         <div className="fixed inset-0 lg:hidden" style={{ zIndex: 9999 }}>
           <div className="absolute inset-0 bg-espresso-900/60" onClick={() => setMobileOpen(false)} />
           <div
-            className="absolute left-0 top-0 h-full w-80 max-w-[85%] shadow-cardHover overflow-y-auto"
+            className="absolute left-0 top-0 bottom-0 w-80 max-w-[85%] overflow-y-auto"
             style={{
               backgroundColor: '#ffffff',
               zIndex: 10000,
+              height: '100dvh',
+              boxShadow: '4px 0 24px rgba(0,0,0,0.18)',
             }}
           >
             <div className="flex items-center justify-between border-b border-espresso-100 px-4 py-4">
