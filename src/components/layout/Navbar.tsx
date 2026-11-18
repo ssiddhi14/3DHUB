@@ -136,19 +136,31 @@ export function Navbar() {
         </div>
       )}
 
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 lg:hidden" style={{ zIndex: 9999 }}>
-          <div className="absolute inset-0 bg-espresso-900/60" onClick={() => setMobileOpen(false)} />
-          <div
-            className="absolute left-0 top-0 bottom-0 w-80 max-w-[85%] overflow-y-auto"
-            style={{
-              backgroundColor: '#ffffff',
-              zIndex: 10000,
-              height: '100dvh',
-              boxShadow: '4px 0 24px rgba(0,0,0,0.18)',
-            }}
-          >
+      {/* Mobile drawer — always in DOM, slides in/out via CSS transform */}
+      {/* Overlay */}
+      <div
+        className="fixed inset-0 lg:hidden"
+        style={{
+          zIndex: 9999,
+          pointerEvents: mobileOpen ? 'auto' : 'none',
+          opacity: mobileOpen ? 1 : 0,
+          transition: 'opacity 300ms ease',
+          backgroundColor: 'rgba(46,32,17,0.55)',
+        }}
+        onClick={() => setMobileOpen(false)}
+      />
+      {/* Drawer panel */}
+      <div
+        className="fixed top-0 left-0 bottom-0 w-80 max-w-[85%] overflow-y-auto lg:hidden"
+        style={{
+          zIndex: 10000,
+          backgroundColor: '#ffffff',
+          boxShadow: '4px 0 32px rgba(0,0,0,0.18)',
+          transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 350ms cubic-bezier(0.4, 0, 0.2, 1)',
+          height: '100dvh',
+        }}
+      >
             <div className="flex items-center justify-between border-b border-espresso-100 px-4 py-4">
               <Logo />
               <button onClick={() => setMobileOpen(false)} className="text-espresso" aria-label="Close menu">
@@ -181,8 +193,8 @@ export function Navbar() {
               </Link>
             </div>
           </div>
-        </div>
-      )}
+
+      {/* Click outside overlay closes - handled by overlay div above */}
     </header>
   )
 }
