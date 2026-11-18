@@ -155,28 +155,28 @@ export function Navbar() {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <div className="flex flex-col gap-1 p-4">
-              <form onSubmit={submitSearch} className="mb-3">
+            <div className="flex flex-col p-4 gap-0.5">
+              <form onSubmit={submitSearch} className="mb-2">
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search products..."
-                  className="w-full rounded-xl border border-espresso-100 px-4 py-2.5 text-sm focus:border-olive focus:outline-none"
+                  className="w-full rounded-xl border border-espresso-100 px-4 py-2 text-sm focus:border-olive focus:outline-none"
                 />
               </form>
-              <p className="px-3 pb-1 pt-3 text-xs font-semibold uppercase tracking-wide text-espresso-300">Shop</p>
+              <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-espresso-300">Shop</p>
               {shopLinks.map((l) => (
-                <Link key={l.to} to={l.to} onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-espresso hover:bg-softSage-50 hover:text-olive">
+                <Link key={l.to} to={l.to} onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-espresso hover:bg-softSage-50 hover:text-olive">
                   {l.label}
                 </Link>
               ))}
-              <Link to="/custom-printing" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-semibold text-olive hover:bg-softSage-50">
+              <Link to="/custom-printing" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-semibold text-olive hover:bg-softSage-50">
                 Custom 3D Printing
               </Link>
-              <div className="my-2 border-t border-espresso-100" />
-              <Link to="/about" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-espresso hover:bg-softSage-50">About</Link>
-              <Link to="/contact" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-espresso hover:bg-softSage-50">Contact</Link>
-              <Link to={user ? '/account' : '/login'} onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-espresso hover:bg-softSage-50">
+              <div className="my-1.5 border-t border-espresso-100" />
+              <Link to="/about" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-espresso hover:bg-softSage-50">About</Link>
+              <Link to="/contact" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-espresso hover:bg-softSage-50">Contact</Link>
+              <Link to={user ? '/account' : '/login'} onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-espresso hover:bg-softSage-50">
                 {user ? 'My Account' : 'Sign In'}
               </Link>
             </div>
