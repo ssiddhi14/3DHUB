@@ -160,7 +160,7 @@ function CustomPrintingCTA() {
 
 function PersonalizedSection({ products }: { products: Product[] }) {
   return (
-    <section className="py-3">
+    <section className="pb-0 pt-3">
       <div className="container-page">
         {/* Banner — full image */}
         <Link to="/shop" className="relative block overflow-hidden rounded-3xl" style={{ minHeight: '220px' }}>
