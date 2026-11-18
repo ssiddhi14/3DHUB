@@ -199,6 +199,7 @@
 /* The outer pin wrapper — GSAP ScrollTrigger pins this */
 .cinematic-pin-wrap {
   position: relative;
+  z-index: 1;
 }
 
 /* Overlay gradient on video */

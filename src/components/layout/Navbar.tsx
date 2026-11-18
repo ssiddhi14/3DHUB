@@ -138,13 +138,13 @@ export function Navbar() {
 
       {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-espresso-900/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+        <div className="fixed inset-0 lg:hidden" style={{ zIndex: 9999 }}>
+          <div className="absolute inset-0 bg-espresso-900/60" onClick={() => setMobileOpen(false)} />
           <div
             className="absolute left-0 top-0 h-full w-80 max-w-[85%] shadow-cardHover overflow-y-auto"
             style={{
               backgroundColor: '#ffffff',
-              zIndex: 60,
+              zIndex: 10000,
             }}
           >
             <div className="flex items-center justify-between border-b border-espresso-100 px-4 py-4">
