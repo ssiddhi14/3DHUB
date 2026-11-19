@@ -6,7 +6,8 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useAsync } from '@/hooks/useData'
-import { fetchUserOrders, fetchUserCustomRequests, fetchProducts, respondToQuotation, fetchQuotations } from '@/services/data'
+import { useWishlist } from '@/context/WishlistContext'
+import { fetchUserOrders, fetchUserCustomRequests, respondToQuotation, fetchQuotations } from '@/services/data'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
@@ -21,12 +22,12 @@ export function Account() {
   const { user, signOut, updateProfile } = useAuth()
   const { toast } = useToast()
   const navigate = useNavigate()
+  const { items: wishlistItems, toggle: toggleWishlist } = useWishlist()
   const [params, setParams] = useSearchParams()
   const [tab, setTab] = useState<Tab>((params.get('tab') as Tab) || 'profile')
   const { data: orders } = useAsync(() => (user ? fetchUserOrders(user.id) : Promise.resolve([])), [user?.id])
   const { data: requests } = useAsync(() => (user ? fetchUserCustomRequests(user.id) : Promise.resolve([])), [user?.id])
   const { data: quotations } = useAsync(() => fetchQuotations(), [])
-  const { data: allProducts } = useAsync(() => fetchProducts({ limit: 100 }))
   const [profileEdit, setProfileEdit] = useState({ full_name: user?.full_name ?? '', phone: user?.phone ?? '' })
   const [saving, setSaving] = useState(false)
 
@@ -49,7 +50,7 @@ export function Account() {
     toast(error ? 'Could not save' : 'Profile updated', error ? 'error' : 'success')
   }
 
-  const wishlist = allProducts?.slice(0, 6) ?? [] // demo wishlist derived from featured products
+  const wishlist = wishlistItems // real wishlist from context
 
   return (
     <div className="bg-softSage-50 min-h-[calc(100vh-4rem)]">
@@ -113,19 +114,36 @@ export function Account() {
 
             {tab === 'wishlist' && (
               <div>
-                {wishlist.length ? (
+                {wishlistItems.length ? (
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                    {wishlist.map((p) => (
-                      <Link key={p.id} to={`/product/${p.slug}`} className="card overflow-hidden">
-                        <img src={p.images[0]} alt={p.title} className="aspect-square w-full object-cover" />
-                        <div className="p-3">
-                          <p className="line-clamp-1 text-sm font-semibold text-espresso">{p.title}</p>
-                          <p className="text-sm font-bold text-olive">{formatPrice(p.discounted_price ?? p.price)}</p>
-                        </div>
-                      </Link>
+                    {wishlistItems.map((p) => (
+                      <div key={p.id} className="card overflow-hidden relative">
+                        <Link to={`/product/${p.slug}`}>
+                          <img src={p.images[0]} alt={p.title} className="aspect-square w-full object-cover" />
+                          <div className="p-3">
+                            <p className="line-clamp-1 text-sm font-semibold text-espresso">{p.title}</p>
+                            <p className="text-sm font-bold text-olive">{formatPrice(p.discounted_price ?? p.price)}</p>
+                          </div>
+                        </Link>
+                        {/* Remove from wishlist */}
+                        <button
+                          onClick={() => { toggleWishlist(p); toast('Removed from wishlist', 'info') }}
+                          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-400 shadow hover:bg-white hover:text-red-600"
+                          aria-label="Remove from wishlist"
+                        >
+                          <Heart className="h-4 w-4 fill-red-400" />
+                        </button>
+                      </div>
                     ))}
                   </div>
-                ) : <EmptyState title="Wishlist is empty" icon={<Heart className="h-6 w-6" />} />}
+                ) : (
+                  <EmptyState
+                    title="Wishlist is empty"
+                    description="Tap the heart icon on any product to save it here."
+                    icon={<Heart className="h-6 w-6" />}
+                    action={<Link to="/shop"><Button>Browse Products</Button></Link>}
+                  />
+                )}
               </div>
             )}
 

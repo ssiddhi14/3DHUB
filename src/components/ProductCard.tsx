@@ -6,6 +6,7 @@ import { SmartImage } from '@/components/ui/SmartImage'
 import { Badge } from '@/components/ui/Badge'
 import { cn, formatPrice, discountPercent } from '@/lib/utils'
 import { useCart } from '@/context/CartContext'
+import { useWishlist } from '@/context/WishlistContext'
 import { useToast } from '@/components/ui/Toast'
 
 interface ProductCardProps {
@@ -16,7 +17,8 @@ interface ProductCardProps {
 export function ProductCard({ product, onQuickView }: ProductCardProps) {
   const { addItem } = useCart()
   const { toast } = useToast()
-  const [wished, setWished] = useState(false)
+  const { isWished, toggle } = useWishlist()
+  const wished = isWished(product.id)
 
   const price = product.discounted_price ?? product.price
   const off = product.discounted_price ? discountPercent(product.price, product.discounted_price) : 0
@@ -50,7 +52,7 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
         {/* hover actions */}
         <div className="absolute right-3 top-3 flex flex-col gap-2">
           <button
-            onClick={(e) => { e.preventDefault(); setWished((w) => !w); toast(wished ? 'Removed from wishlist' : 'Added to wishlist', 'info') }}
+            onClick={(e) => { e.preventDefault(); toggle(product); toast(isWished(product.id) ? 'Removed from wishlist' : 'Added to wishlist', 'info') }}
             className={cn('flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-soft backdrop-blur transition hover:bg-white', wished ? 'text-olive' : 'text-espresso-400 hover:text-olive')}
             aria-label="Toggle wishlist"
           >
