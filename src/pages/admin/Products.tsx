@@ -67,16 +67,19 @@ export function Products() {
   }
 
   const onImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file || !editing) return
-    // reset input so same file can be re-selected if needed
+    const files = Array.from(e.target.files ?? [])
+    if (!files.length || !editing) return
     e.target.value = ''
     setImageUploading(true)
     try {
-      const url = await uploadProductImage(editing.id ?? 'temp', file)
-      if (url) {
-        setEditing((prev) => ({ ...prev, images: [...(prev?.images ?? []), url] }))
-        toast('Image uploaded', 'success')
+      const urls: string[] = []
+      for (const file of files) {
+        const url = await uploadProductImage(editing.id ?? 'temp', file)
+        if (url) urls.push(url)
+      }
+      if (urls.length) {
+        setEditing((prev) => ({ ...prev, images: [...(prev?.images ?? []), ...urls] }))
+        toast(`${urls.length} image${urls.length > 1 ? 's' : ''} uploaded`, 'success')
       } else {
         toast('Upload returned empty URL', 'error')
       }
@@ -149,17 +152,23 @@ export function Products() {
               <label className="label-field">Product images</label>
               <div className="flex flex-wrap gap-3">
                 {(editing.images ?? []).map((img, i) => (
-                  <div key={i} className="relative h-24 w-24 overflow-hidden rounded-xl border border-espresso-100">
+                  <div key={i} className={cn('relative h-24 w-24 overflow-hidden rounded-xl border-2', i === 0 ? 'border-olive' : 'border-espresso-100')}>
                     <img src={img} alt="" className="h-full w-full object-cover" />
+                    {i === 0 && (
+                      <span className="absolute bottom-0 left-0 right-0 bg-olive/80 py-0.5 text-center text-[10px] font-semibold text-white">Cover</span>
+                    )}
                     <button onClick={() => setEditing({ ...editing, images: editing.images!.filter((_, idx) => idx !== i) })} className="absolute right-1 top-1 rounded-full bg-white/90 p-0.5 text-espresso-400 hover:text-red-500"><X className="h-3.5 w-3.5" /></button>
                   </div>
                 ))}
-                <label className={cn('flex h-24 w-24 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-espresso-100 hover:border-olive', imageUploading && 'opacity-60 pointer-events-none')}>
+                <label className={cn('flex h-24 w-24 flex-col cursor-pointer items-center justify-center gap-1 rounded-xl border-2 border-dashed border-espresso-100 hover:border-olive', imageUploading && 'opacity-60 pointer-events-none')}>
                   {imageUploading
                     ? <Loader2 className="h-5 w-5 animate-spin text-olive" />
-                    : <Upload className="h-5 w-5 text-espresso-300" />
+                    : <>
+                        <Upload className="h-5 w-5 text-espresso-300" />
+                        <span className="text-[10px] text-espresso-300">Multiple OK</span>
+                      </>
                   }
-                  <input type="file" className="hidden" accept="image/*" onChange={onImageUpload} disabled={imageUploading} />
+                  <input type="file" multiple className="hidden" accept="image/*" onChange={onImageUpload} disabled={imageUploading} />
                 </label>
               </div>
             </div>
