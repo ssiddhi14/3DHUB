@@ -450,7 +450,7 @@ export async function createOrder(input: {
   }
   if (supabaseReady && supabase) {
     const { data: orderRow, error: oErr } = await supabase.from('orders').insert({
-      id: order.id,
+      // No id — let Postgres generate a proper UUID
       user_id: order.user_id,
       order_number: order.order_number,
       subtotal: order.subtotal,
@@ -463,10 +463,20 @@ export async function createOrder(input: {
       shipping_address: order.shipping_address,
     }).select().single()
     if (oErr) throw oErr
-    const rows = order.items.map((it) => ({ order_id: order.id, product_id: it.product_id, product_title: it.product_title, product_image: it.product_image, quantity: it.quantity, price: it.price, color: it.color }))
+    const savedOrder = orderRow as unknown as Order
+    // Use the DB-generated UUID for order items
+    const rows = order.items.map((it) => ({
+      order_id: savedOrder.id,
+      product_id: it.product_id || null,
+      product_title: it.product_title,
+      product_image: it.product_image,
+      quantity: it.quantity,
+      price: it.price,
+      color: it.color,
+    }))
     const { error: iErr } = await supabase.from('order_items').insert(rows)
     if (iErr) throw iErr
-    return orderRow as unknown as Order
+    return savedOrder
   }
   mutate((s) => {
     s.orders.unshift(order)
