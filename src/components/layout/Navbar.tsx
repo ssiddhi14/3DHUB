@@ -4,6 +4,7 @@ import { Search, ShoppingCart, User, Heart, Menu, X, ChevronDown } from 'lucide-
 import { Logo } from '@/components/ui/Logo'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
+import { useWishlist } from '@/context/WishlistContext'
 import { useAsync } from '@/hooks/useData'
 import { fetchCategories } from '@/services/data'
 import { cn } from '@/lib/utils'
@@ -16,6 +17,7 @@ export function Navbar() {
   const [query, setQuery] = useState('')
   const { itemCount } = useCart()
   const { user } = useAuth()
+  const { count: wishCount } = useWishlist()
   const navigate = useNavigate()
   const { data: dbCategories } = useAsync(() => fetchCategories())
 
@@ -104,8 +106,13 @@ export function Navbar() {
             <button onClick={() => setSearchOpen((s) => !s)} className="rounded-lg p-2 text-espresso hover:bg-softSage-50 hover:text-olive" aria-label="Search">
               <Search className="h-5 w-5" />
             </button>
-            <Link to="/account?tab=wishlist" className="hidden sm:block rounded-lg p-2 text-espresso hover:bg-softSage-50 hover:text-olive" aria-label="Wishlist">
+            <Link to="/account?tab=wishlist" className="rounded-lg p-2 text-espresso hover:bg-softSage-50 hover:text-olive relative" aria-label="Wishlist">
               <Heart className="h-5 w-5" />
+              {wishCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-olive px-1 text-[10px] font-bold text-white">
+                  {wishCount}
+                </span>
+              )}
             </Link>
             <Link to={user ? '/account' : '/login'} className="rounded-lg p-2 text-espresso hover:bg-softSage-50 hover:text-olive" aria-label="Account">
               <User className="h-5 w-5" />
