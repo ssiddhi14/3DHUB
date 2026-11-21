@@ -351,10 +351,7 @@ export function CinematicHero() {
           {/* ── Rolling headline ── */}
           <div ref={headlineRef} className="hero-headline">
             <div className="select-none text-center">
-              {/* Accessible static version for screen readers */}
               <h1 className="sr-only">Think it. Design it. Print it. — 3D HUB</h1>
-
-              {/* Visual animated headline */}
               <p
                 aria-hidden="true"
                 className="leading-none tracking-tight text-white"
@@ -367,8 +364,6 @@ export function CinematicHero() {
               >
                 <RollingWord /> it.
               </p>
-
-              {/* Subline */}
               <p
                 className="mt-5 text-white/60"
                 style={{
@@ -380,25 +375,28 @@ export function CinematicHero() {
               >
                 Premium 3D-printed products &amp; custom printing services
               </p>
-
-              {/* CTAs — always visible and clickable */}
-              <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center" style={{ pointerEvents: 'auto' }}>
-                <Link
-                  to="/shop"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-espresso transition hover:bg-softSage"
-                  style={{ fontFamily: '"Space Grotesk", system-ui, sans-serif' }}
-                >
-                  Explore Products <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  to="/custom-printing"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
-                  style={{ fontFamily: '"Space Grotesk", system-ui, sans-serif' }}
-                >
-                  Custom 3D Printing
-                </Link>
-              </div>
             </div>
+          </div>
+
+          {/* ── CTAs — OUTSIDE headlineRef so GSAP never fades them ── */}
+          <div
+            className="absolute bottom-[28%] left-0 right-0 z-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-espresso transition hover:bg-softSage"
+              style={{ fontFamily: '"Space Grotesk", system-ui, sans-serif' }}
+            >
+              Explore Products <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/custom-printing"
+              className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
+              style={{ fontFamily: '"Space Grotesk", system-ui, sans-serif' }}
+            >
+              Custom 3D Printing
+            </Link>
           </div>
 
           {/* ── Discovery section ── */}
